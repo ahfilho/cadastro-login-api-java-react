@@ -21,8 +21,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_ID")
-    private Long UUID;
+    private Long id;
 
     @NotBlank(message = "O nome não pode estar em branco")
     @Size(min = 2, max = 30, message = "O nome deve ter entre 2 e 50 caracteres")
