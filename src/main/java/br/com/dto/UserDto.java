@@ -1,16 +1,12 @@
 package br.com.dto;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
 public class UserDto {
 
     private Long id;
-    private String nome;
+    private String userName;
     private String email;
     private String senha;
     private String cpf;
