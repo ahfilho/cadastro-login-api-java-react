@@ -5,10 +5,11 @@ import './loginpage.css';
 import { userLogin } from '../src/authenticationService';
 import { Alert, Spinner } from 'react-bootstrap';
 import { Link } from "react-router-dom";
+import NewUser from './NewUser';
 
 const LoginPage = ({ loading, error, ...props }) => {
     const [values, setValues] = useState({
-        nome: '',
+        userName: '',
         senha: ''
     });
 
@@ -20,22 +21,22 @@ const LoginPage = ({ loading, error, ...props }) => {
             console.log("response", response);
             if (response.status === 200) {
                 props.setUser(response.data);
-                props.history.push('/dashboard');
+                props.history.push('/dasboard');
             } else {
-                props.loginFailure('Something Wrong!Please Try Again');
+                props.loginFailure('Something Wrong! Please Try Again');
             }
         }).catch((err) => {
             if (err && err.response) {
                 switch (err.response.status) {
                     case 401:
                         console.log("401 status");
-                        props.loginFailure("Authentication Failed.Bad Credentials");
+                        props.loginFailure("Authentication Failed. Bad Credentials");
                         break;
                     default:
-                        props.loginFailure('Something Wrong!Please Try Again');
+                        props.loginFailure('Something Wrong! Please Try Again');
                 }
             } else {
-                props.loginFailure('Something Wrong!Please Try Again');
+                props.loginFailure('Something Wrong! Please Try Again');
             }
         });
     };
@@ -50,6 +51,9 @@ const LoginPage = ({ loading, error, ...props }) => {
 
     return (
         <div className="login-page">
+            <div className="login-container">
+                <NewUser />
+            </div>
             <section className="h-100">
                 <div className="container h-100">
                     <div className="row justify-content-md-center h-100">
@@ -61,13 +65,13 @@ const LoginPage = ({ loading, error, ...props }) => {
                                         <div className="form-group">
                                             <label htmlFor="email">Usuário</label>
                                             <input
-                                                id="nome"
+                                                id="userName"
                                                 type="text"
                                                 className="form-control"
                                                 minLength={5}
-                                                value={values.nome}
+                                                value={values.userName}
                                                 onChange={handleChange}
-                                                name="nome"
+                                                name="userName"
                                                 required
                                             />
                                             <div className="invalid-feedback">
@@ -76,8 +80,8 @@ const LoginPage = ({ loading, error, ...props }) => {
                                         </div>
                                         <div className="form-group">
                                             <label>Senha
-                                            <Link to="/reset/password" className="animated-button9"></Link>
-                                                    Forgot Password?
+                                                {/* <Link to="**" className="animated-button9"></Link> */}
+                                            
                                             </label>
                                             <input
                                                 id="senha"
@@ -95,8 +99,7 @@ const LoginPage = ({ loading, error, ...props }) => {
                                         </div>
                                         <div className="form-group">
                                             <div className="custom-control custom-checkbox">
-                                                <input type="checkbox" className="custom-control-input" id="customCheck1" />
-                                                <label className="custom-control-label" htmlFor="customCheck1">Remember me</label>
+                                                <br></br>
                                             </div>
                                         </div>
                                         <div className="form-group m-0">
@@ -113,6 +116,8 @@ const LoginPage = ({ loading, error, ...props }) => {
                                                 )}
                                             </button>
                                         </div>
+                                        <div>  <Link to="**" className="animated-button9"></Link>
+                                                Forgot Password?</div>
                                     </form>
                                     {error && (
                                         <Alert style={{ marginTop: '20px' }} variant="danger">
