@@ -1,22 +1,30 @@
 package br.com.entity;
-
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+//
+//import jakarta.persistence.*;
+//import jakarta.validation.constraints.Email;
+//import jakarta.validation.constraints.NotBlank;
+//import jakarta.validation.constraints.Pattern;
+//import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.UUID;
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import java.util.Collection;
+import java.util.List;
 
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "TB_USER")
-public class User {
+public class User implements UserDetails {
 
 
     @Id
@@ -25,7 +33,7 @@ public class User {
 
     @NotBlank(message = "O nome não pode estar em branco")
     @Size(min = 2, max = 30, message = "O nome deve ter entre 2 e 50 caracteres")
-    private String nome;
+    private String userName;
 
     @NotBlank(message = "O e-mail não pode estar em branco")
     @Email(message = "O e-mail deve ser válido")
@@ -41,7 +49,45 @@ public class User {
     private String cpf;
 
     @NotBlank(message = "O perfil não pode estar em branco")
-    @Pattern(regexp = "USUARIO|ADMINISTRADOR", message = "O perfil deve ser USUARIO ou ADMINISTRADOR")
+    @Pattern(regexp = "usuario|admin", message = "O perfil deve ser usuario ou admin")
     private String perfil;
 
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "AUTH_USER_AUTHORITY", joinColumns = @JoinColumn(referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(referencedColumnName = "id"))
+    private List<Authority> authorities;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
 }
