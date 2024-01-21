@@ -7,13 +7,17 @@ import br.com.entity.AuthenticationRequest;
 import br.com.entity.LoginResponse;
 import br.com.entity.UserInfo;
 //import jakarta.servlet.http.HttpServletResponse;
+import br.com.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -21,21 +25,33 @@ import javax.servlet.http.HttpServletResponse;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.security.spec.InvalidKeySpecException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
+@CrossOrigin
 public class AuthenticationController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    JWTTokenHelper jwtTokenHelper;
+    private final JWTTokenHelper jwtTokenHelper;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
-    private CorsConfigurationSource corsConfigurationSource;
+    private final CorsConfigurationSource corsConfigurationSource;
+    private final PasswordEncoder passwordEncoder;
+
+    private final UserService userService;
+
+    public AuthenticationController(AuthenticationManager authenticationManager, JWTTokenHelper jwtTokenHelper, UserDetailsService userDetailsService, CorsConfigurationSource corsConfigurationSource, PasswordEncoder passwordEncoder, UserService userService) {
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenHelper = jwtTokenHelper;
+        this.userDetailsService = userDetailsService;
+        this.corsConfigurationSource = corsConfigurationSource;
+        this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
+    }
+
 
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest, HttpServletResponse res)
@@ -56,6 +72,7 @@ public class AuthenticationController {
     }
 
 
+
     @GetMapping("/auth/userinfo")
     public ResponseEntity<?> getUserInfo(Principal user) {
 
@@ -63,12 +80,10 @@ public class AuthenticationController {
 
         UserInfo userInfo = new UserInfo();
         userInfo.setUserName(userObj.getUsername());
-        userInfo.setSenha(userObj.getSenha());
+        userInfo.setPassword(userObj.getPassword());
         userInfo.setRoles(userObj.getAuthorities().toArray());
 
-
         return ResponseEntity.ok(userInfo);
-
 
     }
 

@@ -7,6 +7,6 @@ public class UserInfo {
 
 
     private String userName;
-    private String senha;
+    private String password;
     private Object roles;
 }

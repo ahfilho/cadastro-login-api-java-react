@@ -2,7 +2,7 @@ package br.com.config.security;
 
 import br.com.auth.JWTAuthenticationFilter;
 import br.com.auth.JWTTokenHelper;
-import br.com.service.CustomUserService;
+import br.com.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
@@ -29,11 +30,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private CustomUserService userService;
+    final UserDetailsServiceImpl userDetailsService;
 
     @Autowired
     private JWTTokenHelper jWTTokenHelper;
@@ -41,19 +42,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationEntryPoint authenticationEntryPoint;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
-    @Autowired
+    @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.inMemoryAuthentication()
-//                .withUser("Arlindo")
-//                .password(passwordEncoder().encode("test@123"))
-//                .authorities("USER", "ADMIN");
-//
-//        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
-
+        auth.userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder());
     }
 
     @Bean
@@ -73,32 +69,38 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().headers().frameOptions().sameOrigin()
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint)
                 .and()
+
                 .csrf(csrf -> csrf.ignoringAntMatchers("/h2-console/**"))
                 .authorizeRequests()
+
                 .antMatchers(("/")).permitAll()
+                .antMatchers("/").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/localhost:3000/**", "/localhost:8080/**").permitAll()
-                .antMatchers("/user/auth/login", "/api/auth", "/", "/auth/login", "/new/user", "/api/auth/login").permitAll()
+                .antMatchers("/user/auth/login", "/user/auth/todos", "/api/auth", "/user/auth/userinfo", "/", "/user/auth/todos", "/auth/login", "/new/user","/new/user/todos","/new/user/{id}", "/api/auth/login").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
-                .addFilterBefore(new JWTAuthenticationFilter(userService, jWTTokenHelper), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JWTAuthenticationFilter(userDetailsService, jWTTokenHelper), UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable()
                 .headers().frameOptions().disable()
                 .and()
                 .cors();
         http.csrf().disable().headers().frameOptions().disable().and().cors();
     }
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         // Ignorar o caminho do console do H2 para que ele seja acessível sem autenticação
         web.ignoring().antMatchers("/h2-console/**");
     }
+
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers(new AntPathRequestMatcher("/h2-console/**"));
@@ -117,4 +119,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         return source;
     }
+
 }

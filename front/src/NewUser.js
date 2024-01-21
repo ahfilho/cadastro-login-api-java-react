@@ -7,7 +7,7 @@ const url = "http://localhost:8080/new/user";
 const NewUser = () => {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
+  const [password, setPassword] = useState("");
   const [cpf, setCpf] = useState("");
   const [perfil, setPerfil] = useState("USER"); // Valor padrão
 
@@ -35,7 +35,7 @@ const NewUser = () => {
     const user = {
       userName,
       email,
-      senha,
+      password,
       cpf,
       perfil,
     };
@@ -48,7 +48,7 @@ const NewUser = () => {
       alert("SALVO COM SUCESSO -- apenas para testes!");
       setUserName("");
       setEmail("");
-      setSenha("");
+      setPassword("");
       setCpf("");
       setPerfil("USER"); // Resetar para o valor padrão
     } catch (error) {
@@ -92,12 +92,12 @@ const NewUser = () => {
                       <div className="inputs">
                         <input
                           type="text"
-                          name="senha"
-                          id="senha"
+                          name="password"
+                          id="password"
                           className="form-control"
-                          value={senha}
-                          placeholder="Senha"
-                          onChange={(e) => setSenha(e.target.value)}
+                          value={password}
+                          placeholder="password"
+                          onChange={(e) => setPassword(e.target.value)}
                         />
                       </div>
                       <div className="inputs">
