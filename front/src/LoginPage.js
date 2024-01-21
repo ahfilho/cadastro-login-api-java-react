@@ -10,7 +10,7 @@ import NewUser from './NewUser';
 const LoginPage = ({ loading, error, ...props }) => {
     const [values, setValues] = useState({
         userName: '',
-        senha: ''
+        password: ''
     });
 
     const handleSubmit = (evt) => {
@@ -53,6 +53,11 @@ const LoginPage = ({ loading, error, ...props }) => {
         <div className="login-page">
             <div className="login-container">
                 <NewUser />
+
+            <Link to="/list" className="animated-button9">
+              Cliente
+            </Link>
+
             </div>
             <section className="h-100">
                 <div className="container h-100">
@@ -84,13 +89,13 @@ const LoginPage = ({ loading, error, ...props }) => {
                                             
                                             </label>
                                             <input
-                                                id="senha"
+                                                id="password"
                                                 type="password"
                                                 className="form-control"
                                                 minLength={6}
-                                                value={values.senha}
+                                                value={values.password}
                                                 onChange={handleChange}
-                                                name="senha"
+                                                name="password"
                                                 required
                                             />
                                             <div className="invalid-feedback">

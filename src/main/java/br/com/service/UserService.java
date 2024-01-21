@@ -8,9 +8,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class UserService  implements UserDetailsService {
+public class UserService implements UserDetailsService {
 
     final UserRepository userRepository;
 
@@ -33,10 +34,12 @@ public class UserService  implements UserDetailsService {
         }
         userRepository.save(user);
     }
+
     public boolean findByCpf(String cpf) {
         User existingCpf = userRepository.userWithSameCpf(cpf);
         return existingCpf != null;
     }
+
     public boolean findByEmail(String email) {
         User existingEmail = userRepository.userWithSameCpf(email);
         return existingEmail != null;
@@ -53,4 +56,25 @@ public class UserService  implements UserDetailsService {
         throw new UsernameNotFoundException("Usuário não encontrado: " + nome);
 
     }
+
+    public List<User> listAll() {
+        return userRepository.findAll();
+    }
+
+    public void delete(Long id) throws Exception {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            // Certifique-se de que a comparação seja insensível a maiúsculas/minúsculas
+            if ("admin".equalsIgnoreCase(user.getPerfil())) {
+                userRepository.delete(user);
+            } else {
+                throw new Exception("Usuário não autorizado para excluir.");
+            }
+        } else {
+            throw new Exception("Usuário não encontrado para deletar.");
+        }
+    }
+
 }

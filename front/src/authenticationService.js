@@ -22,4 +22,13 @@ export const fetchUserData=(authRequest)=>{
             'Authorization':'Bearer '+getToken()
         }
     })
+// }
+    // export const teste=(authRequest)=>{
+    //     return axios({
+    //         method:'GET',
+    //         url:`${process.env.hostUrl||'http://localhost:8080'}/user/auth/todos`,
+    //         headers:{
+    //             'Authorization':'Bearer '+getToken()
+    //         }
+    //     })
 }

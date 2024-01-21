@@ -3,9 +3,12 @@ package br.com.repository;
 import br.com.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import javax.swing.*;
+import java.util.Optional;
 
+@Repository
 public interface UserRepository  extends JpaRepository<User,Long> {
 
     @Query("SELECT u FROM User u WHERE u.cpf = ?1")
@@ -21,4 +24,7 @@ public interface UserRepository  extends JpaRepository<User,Long> {
     public User clientWithSameCpf(String cpf);
 
     @Query("SELECT u FROM User u WHERE u.userName = ?1")
-    User findByNome(String nome);}
+    User findByNome(String nome);
+
+    Optional<User> findByUserName(String username);
+}
