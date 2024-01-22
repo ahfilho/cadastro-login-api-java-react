@@ -1,8 +1,6 @@
 package br.com.controller;
 
 import br.com.auth.JWTTokenHelper;
-import br.com.dto.LoginDto;
-import br.com.dto.UserDto;
 import br.com.entity.AuthenticationRequest;
 import br.com.entity.LoginResponse;
 import br.com.entity.User;
@@ -10,8 +8,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -50,12 +46,12 @@ public class AuthController {
             throws InvalidKeySpecException, NoSuchAlgorithmException {
 
         final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                authenticationRequest.getUserName(), authenticationRequest.getPassword()));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+                authenticationRequest.getUsername(), authenticationRequest.getPassword()));
 
         User user = (User) authentication.getPrincipal();
         String jwtToken = jwtTokenHelper.generateToken(user.getUsername());
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         LoginResponse response = new LoginResponse();
         response.setToken(jwtToken);

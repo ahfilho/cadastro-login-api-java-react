@@ -16,26 +16,19 @@ import java.util.Optional;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    //    @Autowired
-//    private UserDetailsRepository userDetailsRepository;
-    private final UserDetailsRepository userDetailsRepository;
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    public UserDetailsServiceImpl(UserDetailsRepository userDetailsRepository, UserRepository userRepository) {
-        this.userDetailsRepository = userDetailsRepository;
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    private UserDetailsRepository userDetailsRepository;
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUserName(username).orElseThrow(() ->
-                new UsernameNotFoundException("Usuário não encontrado para este nome: " + username));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Nome de usuário não encontrado:" + username));
 
-//        Optional<User> user2 = Optional.ofNullable(userRepository.findByUserName(username).orElseThrow(() ->
-//                new UsernameNotFoundException("Usuário não encontrado para este nome: " + username)));
-
-        return new User(user.getUsername(), user.getPassword(),true, true,true,true, user.getAuthorities());
-
-
+        return user; // Certifique-se de que a classe User implementa UserDetails
     }
 }
+
+

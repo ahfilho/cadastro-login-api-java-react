@@ -82,7 +82,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/localhost:3000/**", "/localhost:8080/**").permitAll()
-                .antMatchers("/user/auth/login", "/user/auth/todos", "/api/auth", "/user/auth/userinfo", "/", "/user/auth/todos", "/auth/login", "/new/user","/new/user/todos","/new/user/{id}", "/api/auth/login").permitAll()
+                .antMatchers("/user/auth/login", "/user/auth/todos", "/api/auth", "swagger-ui.html", "/user/auth/userinfo", "/", "/user/auth/todos", "/auth/login", "/new/user", "/new/user/todos", "/new/user/{id}", "/api/auth/login").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest().authenticated()
 

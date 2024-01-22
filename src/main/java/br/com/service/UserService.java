@@ -24,7 +24,7 @@ public class UserService implements UserDetailsService {
         List<User> users = userRepository.findAll();
 
         for (User usr : users) {
-            if ("ADMINISTRADOR".equals(usr.getPerfil())) {
+            if ("ADMINISTRADOR".equals(usr.getProfile())) {
                 // É um administrador
                 System.out.println("Administrador: " + usr.getUsername());
             } else {
@@ -41,7 +41,7 @@ public class UserService implements UserDetailsService {
     }
 
     public boolean findByEmail(String email) {
-        User existingEmail = userRepository.userWithSameCpf(email);
+        User existingEmail = userRepository.userWithSameEmail(email);
         return existingEmail != null;
     }
 
@@ -67,7 +67,7 @@ public class UserService implements UserDetailsService {
             User user = optionalUser.get();
 
             // Certifique-se de que a comparação seja insensível a maiúsculas/minúsculas
-            if ("admin".equalsIgnoreCase(user.getPerfil())) {
+            if ("admin".equalsIgnoreCase(user.getProfile())) {
                 userRepository.delete(user);
             } else {
                 throw new Exception("Usuário não autorizado para excluir.");

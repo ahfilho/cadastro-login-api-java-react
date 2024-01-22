@@ -5,11 +5,11 @@ import './NewUser.css';
 const url = "http://localhost:8080/new/user";
 
 const NewUser = () => {
-  const [userName, setUserName] = useState("");
+  const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [cpf, setCpf] = useState("");
-  const [perfil, setPerfil] = useState("USER"); // Valor padrão
+  const [profile, setProfile] = useState("USER"); // Valor padrão
 
   const formatCpf = (value) => {
     // Remove caracteres não numéricos
@@ -33,11 +33,11 @@ const NewUser = () => {
     e.preventDefault();
 
     const user = {
-      userName,
+      username,
       email,
       password,
       cpf,
-      perfil,
+      profile,
     };
 
     try {
@@ -50,7 +50,7 @@ const NewUser = () => {
       setEmail("");
       setPassword("");
       setCpf("");
-      setPerfil("USER"); // Resetar para o valor padrão
+      setProfile("USER"); // Resetar para o valor padrão
     } catch (error) {
       console.error("Erro ao salvar usuário:", error);
     }
@@ -70,11 +70,11 @@ const NewUser = () => {
                       <div className="form-group">
                         <input
                           type="text"
-                          name="userName"
-                          id="userName"
-                          value={userName}
+                          name="username"
+                          id="username"
+                          value={username}
                           className="form-control"
-                          placeholder="userName"
+                          placeholder="User name"
                           onChange={(e) => setUserName(e.target.value)}
                         />
                       </div>
@@ -117,20 +117,20 @@ const NewUser = () => {
                           <label>
                             <input
                               type="radio"
-                              name="perfil"
+                              name="profile"
                               value="admin"
-                              checked={perfil === "admin"}
-                              onChange={() => setPerfil("admin")}
+                              checked={profile === "admin"}
+                              onChange={() => setProfile("admin")}
                             />
                             Administrador
                           </label>
                           <label>
                             <input
                               type="radio"
-                              name="perfil"
+                              name="profile"
                               value="usuario"
-                              checked={perfil === "usuario"}
-                              onChange={() => setPerfil("usuario")}
+                              checked={profile === "usuario"}
+                              onChange={() => setProfile("usuario")}
                             />
                             Usuário
                           </label>

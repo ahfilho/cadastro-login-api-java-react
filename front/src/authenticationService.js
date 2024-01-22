@@ -17,18 +17,9 @@ export const userLogin=(authRequest)=>{
 export const fetchUserData=(authRequest)=>{
     return axios({
         method:'GET',
-        url:`${process.env.hostUrl||'http://localhost:9090'}/user/auth/userinfo`,
+        url:`${process.env.hostUrl||'http://localhost:8080'}/user/auth/userinfo`,
         headers:{
             'Authorization':'Bearer '+getToken()
         }
     })
-// }
-    // export const teste=(authRequest)=>{
-    //     return axios({
-    //         method:'GET',
-    //         url:`${process.env.hostUrl||'http://localhost:8080'}/user/auth/todos`,
-    //         headers:{
-    //             'Authorization':'Bearer '+getToken()
-    //         }
-    //     })
 }
