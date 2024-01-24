@@ -25,20 +25,20 @@ const LoginPage = ({ loading, error, ...props }) => {
                 props.setUser(response.data);
                 props.history.push('/hola');
             } else {
-                props.loginFailure('Something Wrong! Please Try Again');
+                props.loginFailure('Algo saiu errado. Tente novamente.');
             }
         }).catch((err) => {
             if (err && err.response) {
                 switch (err.response.status) {
                     case 401:
                         console.log("401 status");
-                        props.loginFailure("Authentication Failed. Bad Credentials");
+                        props.loginFailure("A autenticação falhou. Reveja seus dados.");
                         break;
                     default:
-                        props.loginFailure('Something Wrong! Please Try Again');
-                }
+                        props.loginFailure('Algo saiu errado. Tente novamente.');
+                    }
             } else {
-                props.loginFailure('Something Wrong! Please Try Again');
+                props.loginFailure('Algo saiu errado. Tente novamente.');
             }
         });
     };
@@ -119,14 +119,14 @@ const LoginPage = ({ loading, error, ...props }) => {
                                             </button>
                                         </div>
                                         <div>
-
+                                        asdasdas@gmail.com	126.165.432-15
                                             <br></br>
                                             <br></br>
                                             <Link
                                                 to="/forgot/password"
                                                 style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
                                             >
-                                                Forgot Password?
+                                                Esqueceu sua senha?
                                             </Link>
                                         </div>
 

@@ -5,7 +5,7 @@ import br.com.auth.JWTTokenHelper;
 import br.com.dto.UserDto;
 import br.com.entity.User;
 import br.com.service.UserService;
-import io.swagger.annotations.Api;
+//import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -24,7 +24,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/new/user", produces = {"application/json"})
-@Api(value = "open-api")
 @CrossOrigin
 public class UserController {
 
@@ -34,17 +33,18 @@ public class UserController {
     JWTTokenHelper jwtTokenHelper;
 
 
-    @Operation(summary = "Cadastra o usuário com usuário e senha.", method = "POST")
+    @Operation(summary = "Cadastra o usuário com nome e senha.", method = "POST")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "201", description = "Created. Usuário criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST. Verifique os dados. Cpf ou E-mail já existem no banco."),
             @ApiResponse(responseCode = "500", description = "Falha no serviço."),
+
 
     })
     @PostMapping()
     public ResponseEntity<?> save(@RequestBody @Validated UserDto userDto, BindingResult result) {
         try {
-            boolean existingCpf = userService.findByCpf(userDto.getCpf());
+            boolean existingCpf = userService.findUserByCpf(userDto.getCpf());
             boolean existingEmail = userService.findByEmail(userDto.getEmail());
 
             if (existingCpf) {
@@ -61,14 +61,12 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A senha não pode ser nula.");
             }
 
-            // Crie o usuário a partir do DTO
             ModelMapper modelMapper = new ModelMapper();
             var user = modelMapper.map(userDto, User.class);
 
             String encryptedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(encryptedPassword);
-            // Salve o usuário no banco de dados
-            userService.save(user);
+            userService.saveNewUser(user);
 
             return ResponseEntity.status(HttpStatus.CREATED).body("Usuário cadastrado com sucesso! \n");
         } catch (Exception e) {
@@ -76,31 +74,49 @@ public class UserController {
         }
     }
 
+    @Operation(summary = "Lista todos os usuários com as informações,.", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK. Lista todos os cadastrados."),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST. Verifique os dados. Cpf ou E-mail já existe no banco."),
+            @ApiResponse(responseCode = "500", description = "Deleta o usuário apenas se o perfil for de ADMIN."),
+
+
+    })
     @GetMapping("/todos")
     public List<User> list() {
         return userService.listAll();
     }
 
+
+    @Operation(summary = "Deleta um usário do banco..", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Deleta um usuário pelo seu ID"),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST. Verifique os dados. Cpf ou E-mail já existe no banco."),
+            @ApiResponse(responseCode = "500", description = "Deleta o usuário apenas se o perfil for de ADMIN."),
+    })
     @DeleteMapping("/{id}")
-    public HttpStatus ramDelete(@PathVariable Long id) throws Exception {
-        this.userService.delete(id);
+    public HttpStatus userDelete(@PathVariable Long id) throws Exception {
+        this.userService.deleteUserById(id);
         return HttpStatus.OK;
     }
+
+    @Operation(summary = "Reseta a senha de um usuário mediante confirmação de CPF E EMAIL.", method = "PUT")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK. Operação realizada com sucesso."),
+            @ApiResponse(responseCode = "201", description = "CREATED. REQUEST. Verifique os dados. Cpf ou E-mail já existe no banco."),
+            @ApiResponse(responseCode = "400", description = "BAD REQUEST. CPF e/ou E-mail não existem no banco. "),
+
+
+    })
     @PutMapping("/reset")
     public ResponseEntity<?> resetPassword(@RequestBody @Validated UserDto userDto, BindingResult result) {
-       try{
-            // Crie o usuário a partir do DTO
+        try {
             ModelMapper modelMapper = new ModelMapper();
             var user = modelMapper.map(userDto, User.class);
-
-//            String encryptedPassword = passwordEncoder.encode(user.getPassword());
-//            user.setPassword(encryptedPassword);
-            // Salve o usuário no banco de dados
-            userService.dataUpdate(user);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body("Usuário cadastrado com sucesso! \n");
+            userService.resetPasswordFromUser(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Senha alterada com sucesso! \n");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao cadastrar usuário. Erro na validação dos dados." + result.getAllErrors());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao alterar os dados. Erro na validação." + result.getAllErrors());
         }
     }
 

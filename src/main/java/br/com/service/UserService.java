@@ -3,8 +3,6 @@ package br.com.service;
 import br.com.entity.User;
 import br.com.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,7 +25,7 @@ public class UserService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-    public void save(User user) {
+    public void saveNewUser(User user) {
 
         List<User> users = userRepository.findAll();
 
@@ -58,23 +56,22 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
-    public void delete(Long id) throws Exception {
+    public void deleteUserById(Long id) throws Exception {
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
 
-            // Certifique-se de que a comparação seja insensível a maiúsculas/minúsculas
             if ("admin".equalsIgnoreCase(user.getProfile())) {
                 userRepository.delete(user);
             } else {
                 throw new Exception("Usuário não autorizado para excluir.");
             }
         } else {
-            throw new Exception("Usuário não encontrado para deletar.");
+            throw new Exception("Usuário não encontrado para excluir.");
         }
     }
 
-    public void dataUpdate(User user) {
+    public void resetPasswordFromUser(User user) {
         try {
             User existingUser = userRepository.userWithSameCpf(user.getCpf());
 
@@ -90,7 +87,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public boolean findByCpf(String cpf) {
+    public boolean findUserByCpf(String cpf) {
         User existingCpf = userRepository.userWithSameCpf(cpf);
         return existingCpf != null;
     }
@@ -99,13 +96,5 @@ public class UserService implements UserDetailsService {
         User existingEmail = userRepository.userWithSameEmail(email);
         return existingEmail != null;
     }
-//
-//    private boolean findByPassword(String password) {
-//        User user = userRepository.findByUsernameAndPassword(password);
-//        if (user != null) {
-//            return user.getPassword().equalsIgnoreCase(password);
-//        }
-//        return
-//                false;
-//    }
+
 }

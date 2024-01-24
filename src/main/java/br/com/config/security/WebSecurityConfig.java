@@ -97,6 +97,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                 .antMatchers("/new/user/reset").permitAll()
+                .antMatchers("swagger-ui.html").permitAll()
+                .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .antMatchers().permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin().loginPage("/").permitAll()
@@ -111,7 +113,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         // Ignorar o caminho do console do H2 para que ele seja acessível sem autenticação
-        web.ignoring().antMatchers("/h2-console/**");
+        web.ignoring().antMatchers("/h2-console/**","/swagger-ui/**, /v3/api-docs/**", "/**.html",
+                "/v2/api-docs",
+                "/webjars/**",
+                "/configuration/**",
+                "/swagger-resources/**","/v3/api-docs/**",
+                "/swagger-ui/**", "/swagger-ui/index.html/**");
+
     }
 
     @Bean
