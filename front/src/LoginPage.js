@@ -119,7 +119,6 @@ const LoginPage = ({ loading, error, ...props }) => {
                                             </button>
                                         </div>
                                         <div>
-                                        asdasdas@gmail.com	126.165.432-15
                                             <br></br>
                                             <br></br>
                                             <Link
