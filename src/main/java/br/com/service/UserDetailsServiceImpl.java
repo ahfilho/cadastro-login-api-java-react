@@ -8,11 +8,11 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Primary
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
@@ -22,12 +22,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserDetailsRepository userDetailsRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Nome de usuário não encontrado:" + username));
+        Optional<User> userOptional = Optional.ofNullable(userDetailsRepository.findByUserName(username));
 
-        return user; // Certifique-se de que a classe User implementa UserDetails
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            return user;
+        } else {
+            throw new UsernameNotFoundException("Nome de usuário não encontrado: " + username);
+        }
     }
 }
 

@@ -66,7 +66,7 @@ class ListUser extends Component {
           {this.state.usuarios.map((user) => (
             <tr key={user.id}>
               <td>{user.id}</td>
-              <td>{user.userName}</td>
+              <td>{user.username}</td>
               <td>{user.email}</td>
               <td>{user.cpf}</td>
               <td>{user.profile}</td>

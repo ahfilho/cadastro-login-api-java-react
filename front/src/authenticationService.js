@@ -3,7 +3,7 @@ import axios from 'axios';
 
 
 const getToken=()=>{
-    return localStorage.getItem('USER_KEY');
+    return localStorage.getItem('USER_PASSWORD');
 }
 
 export const userLogin=(authRequest)=>{

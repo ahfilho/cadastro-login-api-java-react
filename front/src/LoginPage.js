@@ -6,23 +6,19 @@ import { userLogin } from '../src/authenticationService';
 import { Alert, Spinner } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import NewUser from './NewUser';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = ({ loading, error, ...props }) => {
     const [values, setValues] = useState({
-        username: '',
+        userName: '',
         password: ''
     });
+    const history = useNavigate();
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
         props.authenticate();
-
-
-
         console.log(values, "aaaaa");
-
-
-
         userLogin(values).then((response) => {
             console.log("response", response);
             if (response.status === 200) {
@@ -59,11 +55,6 @@ const LoginPage = ({ loading, error, ...props }) => {
         <div className="login-page">
             <div className="login-container">
                 <NewUser />
-
-                <Link to="/list" className="animated-button9">
-                    Cliente
-                </Link>
-
             </div>
             <section className="h-100">
                 <div className="container h-100">
@@ -80,9 +71,9 @@ const LoginPage = ({ loading, error, ...props }) => {
                                                 type="text"
                                                 className="form-control"
                                                 minLength={5}
-                                                value={values.username}
+                                                value={values.userName}
                                                 onChange={handleChange}
-                                                name="username"
+                                                name="userName"
                                                 required
                                             />
                                             <div className="invalid-feedback">
@@ -127,8 +118,18 @@ const LoginPage = ({ loading, error, ...props }) => {
                                                 )}
                                             </button>
                                         </div>
-                                        <div>  <Link to="**" className="animated-button9"></Link>
-                                            Forgot Password?</div>
+                                        <div>
+
+                                            <br></br>
+                                            <br></br>
+                                            <Link
+                                                to="/forgot/password"
+                                                style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
+                                            >
+                                                Forgot Password?
+                                            </Link>
+                                        </div>
+
                                     </form>
                                     {error && (
                                         <Alert style={{ marginTop: '20px' }} variant="danger">
@@ -136,12 +137,13 @@ const LoginPage = ({ loading, error, ...props }) => {
                                         </Alert>
                                     )}
                                 </div>
+
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </div>
+                </div >
+            </section >
+        </div >
     );
 };
 

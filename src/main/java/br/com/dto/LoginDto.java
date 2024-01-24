@@ -12,4 +12,7 @@ public class LoginDto {
 
     private String nome;
     private String senha;
+
+    public LoginDto(String jwtToken) {
+    }
 }

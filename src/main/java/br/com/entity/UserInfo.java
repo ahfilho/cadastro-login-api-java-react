@@ -6,7 +6,7 @@ import lombok.Data;
 public class UserInfo {
 
 
-    private String username;
+    private String userName;
     private String password;
     private Object roles;
 }

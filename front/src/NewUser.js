@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 import './NewUser.css';
+import { Link } from "react-router-dom";
+
 
 const url = "http://localhost:8080/new/user";
 
 const NewUser = () => {
-  const [username, setUserName] = useState("");
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [cpf, setCpf] = useState("");
@@ -33,7 +35,7 @@ const NewUser = () => {
     e.preventDefault();
 
     const user = {
-      username,
+      userName,
       email,
       password,
       cpf,
@@ -57,102 +59,110 @@ const NewUser = () => {
   };
 
   return (
-    <div className="login-page ">
-      <div className="new-user-form .brand">
-        <section className="h-100">
-          <div className="container h-100">
-            <div className="row justify-content-md-center h-100">
-              <div className="card-wrapper">
-                <div className="card fat">
-                  <div className="card-body">
-                    <h4 className="card-title">Cadastrar</h4>
-                    <form id="formulario" onSubmit={handleSubmit} className="login-form">
-                      <div className="form-group">
-                        <input
-                          type="text"
-                          name="username"
-                          id="username"
-                          value={username}
-                          className="form-control"
-                          placeholder="User name"
-                          onChange={(e) => setUserName(e.target.value)}
-                        />
+    <div className="login-page">
+
+      <section className="h-100">
+        <div className="container h-100">
+          <div className="row justify-content-md-center h-100">
+            <div className="card-wrapper">
+              <div className="card fat">
+                <div className="card-body">
+                  <h4 className="card-title">Cadastrar</h4>
+                  <form id="formulario" onSubmit={handleSubmit} className="login-form">
+                    <div className="form-group">
+                      <input
+                        type="text"
+                        name="userName"
+                        id="userName"
+                        value={userName}
+                        className="form-control"
+                        placeholder="Nome"
+                        onChange={(e) => setUserName(e.target.value)}
+                      />
+                    </div>
+                    <div className="inputs">
+                      <input
+                        type="text"
+                        name="email"
+                        id="email"
+                        className="form-control"
+                        value={email}
+                        placeholder="E-mail"
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </div>
+                    <div className="inputs">
+                      <input
+                        type="text"
+                        name="password"
+                        id="password"
+                        className="form-control"
+                        value={password}
+                        placeholder="Senha"
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                    </div>
+                    <div className="inputs">
+                      <input
+                        type="text"
+                        name="cpf"
+                        id="cpf"
+                        className="form-control"
+                        value={cpf}
+                        placeholder="Cpf"
+                        onChange={handleCpfChange}
+                      />
+                    </div>
+                    <div className="inputs">
+                      <label>Perfil</label>
+                      <div>
+                        <label>
+                          <input
+                            type="radio"
+                            name="profile"
+                            value="admin"
+                            checked={profile === "admin"}
+                            onChange={() => setProfile("admin")}
+                          />
+                          Administrador
+                        </label>
+                        <label>
+                          <input
+                            type="radio"
+                            name="profile"
+                            value="usuario"
+                            checked={profile === "usuario"}
+                            onChange={() => setProfile("usuario")}
+                          />
+                          Usuário
+                        </label>
                       </div>
-                      <div className="inputs">
-                        <input
-                          type="text"
-                          name="email"
-                          id="email"
-                          className="form-control"
-                          value={email}
-                          placeholder="E-mail"
-                          onChange={(e) => setEmail(e.target.value)}
-                        />
+                    </div>
+                    <br></br>
+                    <div className="login-container">
+                      <input
+                        className="btn btn-primary"
+                        type="submit"
+                        value="Cadastrar"
+                      ></input>
+                      <div className="new-user-form">
+                        <button type="submit" className="btn btn-primary">
+                          <Link to="/list" className="animated-button9" style={{ color: 'white', textDecoration: 'none' }}>
+                            Listar todos
+                          </Link>
+                        </button>
                       </div>
-                      <div className="inputs">
-                        <input
-                          type="text"
-                          name="password"
-                          id="password"
-                          className="form-control"
-                          value={password}
-                          placeholder="password"
-                          onChange={(e) => setPassword(e.target.value)}
-                        />
-                      </div>
-                      <div className="inputs">
-                        <input
-                          type="text"
-                          name="cpf"
-                          id="cpf"
-                          className="form-control"
-                          value={cpf}
-                          placeholder="Cpf"
-                          onChange={handleCpfChange}
-                        />
-                      </div>
-                      <div className="inputs">
-                        <label>Perfil</label>
-                        <div>
-                          <label>
-                            <input
-                              type="radio"
-                              name="profile"
-                              value="admin"
-                              checked={profile === "admin"}
-                              onChange={() => setProfile("admin")}
-                            />
-                            Administrador
-                          </label>
-                          <label>
-                            <input
-                              type="radio"
-                              name="profile"
-                              value="usuario"
-                              checked={profile === "usuario"}
-                              onChange={() => setProfile("usuario")}
-                            />
-                            Usuário
-                          </label>
-                        </div>
-                      </div>
-                      <br></br>
-                      <div className="inputs">
-                        <input
-                          className="btn btn-primary"
-                          type="submit"
-                          value="Submit"
-                        ></input>
-                      </div>
-                    </form>
-                  </div>
+
+                    </div>
+
+                  </form>
                 </div>
               </div>
             </div>
           </div>
-        </section>
-      </div >
-    </div >
+        </div>
+      </section>
+    </div>
   );
 };
 

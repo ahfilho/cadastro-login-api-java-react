@@ -5,7 +5,7 @@ import ResetPassword from './ResetPassword';
 import NewUser from './NewUser';
 import Hola from './Hola';
 import Listar from './Listar';
-
+import ForgotPass from './ForgotPass';
 function App() {
   return (
     <Routes>
@@ -14,6 +14,7 @@ function App() {
       <Route path="/new/user" exact element={<NewUser />} />
       <Route path="/hola" exact element={<Hola />} />
       <Route path="/list" exact element={<Listar />} />
+      <Route path="/forgot/password" exact element={<ForgotPass/>}/> 
 
     </Routes>
   );

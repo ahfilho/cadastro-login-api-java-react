@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository  extends JpaRepository<User,Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u WHERE u.cpf = ?1")
     public User userWithSameCpf(String cpf);
@@ -17,19 +17,23 @@ public interface UserRepository  extends JpaRepository<User,Long> {
     @Query("SELECT u FROM User u WHERE u.email = ?1")
     public User userWithSameEmail(String email);
 
-    @Query("SELECT u FROM User u WHERE u.username = ?1")
+    @Query("SELECT u FROM User u WHERE u.userName = ?1")
     String findByName();
 
     @Query("SELECT c FROM User c WHERE c.cpf = ?1")
     public User clientWithSameCpf(String cpf);
 
-    @Query("SELECT u FROM User u WHERE u.username = ?1")
+    @Query("SELECT u FROM User u WHERE u.userName = ?1")
     User findByNome(String nome);
+//
+//    @Query("SELECT u FROM User u WHERE u.cpf = :cpf AND u.password = :password")
+//    User findByUsernameAndPassword(@Param("cpf") String cpf, @Param("password") String password);
 
 //    @Query("SELECT u FROM User u WHERE LOWER(u.username) = LOWER(:username)")
+
 //    public User findByUsernameIgnoreCase(@Param("username") String username);
 
 
 //    @Query("SELECT u FROM User u WHERE LOWER(u.userName) = LOWER(:username)")
-    Optional<User> findByUsername(String username);
+//    Optional<User> findByUseName(String username);
 }

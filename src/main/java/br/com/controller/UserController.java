@@ -3,14 +3,12 @@ package br.com.controller;
 
 import br.com.auth.JWTTokenHelper;
 import br.com.dto.UserDto;
-import br.com.entity.LoginResponse;
 import br.com.entity.User;
 import br.com.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,21 +49,22 @@ public class UserController {
 
             if (existingCpf) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                        String.format("Não foi possível cadastrar o cliente: " + userDto.getUsername() + ", pois, o CPF e/ou E-mail:" + userDto.getCpf() + " já existem na base de dados."));
+                        String.format("Não foi possível cadastrar o cliente: " + userDto.getUserName() + ", pois, o CPF e/ou E-mail:" + userDto.getCpf() + " já existem na base de dados."));
             }
             if (existingEmail) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                        String.format("Não foi possível cadastrar o cliente: " + userDto.getUsername() + ", pois, o E-mail:" + userDto.getEmail() + " já existe na base de dados."));
+                        String.format("Não foi possível cadastrar o cliente: " + userDto.getUserName() + ", pois, o E-mail:" + userDto.getEmail() + " já existe na base de dados."));
             }
 
 
-            if (userDto.getUsername() == null || userDto.getPassword() == null) {
+            if (userDto.getUserName() == null || userDto.getPassword() == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A senha não pode ser nula.");
             }
 
             // Crie o usuário a partir do DTO
             ModelMapper modelMapper = new ModelMapper();
             var user = modelMapper.map(userDto, User.class);
+
             String encryptedPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(encryptedPassword);
             // Salve o usuário no banco de dados
@@ -87,6 +86,22 @@ public class UserController {
         this.userService.delete(id);
         return HttpStatus.OK;
     }
+    @PutMapping("/reset")
+    public ResponseEntity<?> resetPassword(@RequestBody @Validated UserDto userDto, BindingResult result) {
+       try{
+            // Crie o usuário a partir do DTO
+            ModelMapper modelMapper = new ModelMapper();
+            var user = modelMapper.map(userDto, User.class);
 
+//            String encryptedPassword = passwordEncoder.encode(user.getPassword());
+//            user.setPassword(encryptedPassword);
+            // Salve o usuário no banco de dados
+            userService.dataUpdate(user);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body("Usuário cadastrado com sucesso! \n");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao cadastrar usuário. Erro na validação dos dados." + result.getAllErrors());
+        }
+    }
 
 }

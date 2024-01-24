@@ -46,7 +46,7 @@ public class AuthController {
             throws InvalidKeySpecException, NoSuchAlgorithmException {
 
         final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                authenticationRequest.getUsername(), authenticationRequest.getPassword()));
+                authenticationRequest.getUserName(), authenticationRequest.getPassword()));
 
         User user = (User) authentication.getPrincipal();
         String jwtToken = jwtTokenHelper.generateToken(user.getUsername());
