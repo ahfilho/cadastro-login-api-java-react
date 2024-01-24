@@ -31,10 +31,8 @@ public class UserService implements UserDetailsService {
 
         for (User usr : users) {
             if ("ADMINISTRADOR".equals(usr.getProfile())) {
-                // É um administrador
                 System.out.println("Administrador: " + usr.getUsername());
             } else {
-                // É um usuário comum
                 System.out.println("Usuário Comum: " + usr.getUsername());
             }
         }
