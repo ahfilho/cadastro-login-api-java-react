@@ -1,13 +1,16 @@
 package br.com.config.security;
 
+
 import br.com.auth.JWTAuthenticationFilter;
 import br.com.auth.JWTTokenHelper;
+import br.com.service.UserDetailsService;
 import br.com.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -15,16 +18,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 
 @Configuration
 @EnableWebSecurity
@@ -34,7 +36,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    final UserDetailsServiceImpl userDetailsService;
+    @Autowired
+    private UserDetailsServiceImpl userDetailsServiceImpl;
 
     @Autowired
     private JWTTokenHelper jWTTokenHelper;
@@ -42,14 +45,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationEntryPoint authenticationEntryPoint;
 
-    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService) {
-        this.userDetailsService = userDetailsService;
+    public WebSecurityConfig(UserDetailsServiceImpl userDetailsServiceImpl ) {
+        this.userDetailsServiceImpl = userDetailsServiceImpl;
+    }
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
+
     }
 
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder());
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -59,8 +66,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsServiceImpl);
+        authProvider.setPasswordEncoder(passwordEncoder()); // Configure o encoder de senha apropriado (por exemplo, BCryptPasswordEncoder)
+        return authProvider;
     }
 
     @Override
@@ -78,20 +88,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf(csrf -> csrf.ignoringAntMatchers("/h2-console/**"))
                 .authorizeRequests()
 
+
                 .antMatchers(("/")).permitAll()
-                .antMatchers("/").permitAll()
+                .antMatchers("/login").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/localhost:3000/**", "/localhost:8080/**").permitAll()
-                .antMatchers("/user/auth/login", "/user/auth/todos", "/api/auth", "/user/auth/userinfo", "/", "/user/auth/todos", "/auth/login", "/new/user","/new/user/todos","/new/user/{id}", "/api/auth/login").permitAll()
+                .antMatchers("/user/auth/login", "/user/auth/todos","/new/user/reset", "/api/auth", "swagger-ui.html", "/user/auth/userinfo", "/", "/user/auth/todos", "/auth/login", "/new/user", "/new/user/todos", "/new/user/{id}", "/api/auth/login").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                .antMatchers("/new/user/reset").permitAll()
+                .antMatchers().permitAll()
                 .anyRequest().authenticated()
+                .and().formLogin().loginPage("/").permitAll()
+                .and().logout().permitAll()
 
                 .and()
-                .addFilterBefore(new JWTAuthenticationFilter(userDetailsService, jWTTokenHelper), UsernamePasswordAuthenticationFilter.class)
-                .csrf().disable()
-                .headers().frameOptions().disable()
-                .and()
-                .cors();
+                .addFilterBefore(new JWTAuthenticationFilter(userDetailsServiceImpl, jWTTokenHelper), UsernamePasswordAuthenticationFilter.class);
+
         http.csrf().disable().headers().frameOptions().disable().and().cors();
     }
 

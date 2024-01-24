@@ -19,7 +19,4 @@ public class AuthService {
         User existingCLient = userRepository.clientWithSameCpf(cpf);
         return existingCLient != null;
     }
-
-
-
 }

@@ -66,10 +66,10 @@ class ListUser extends Component {
           {this.state.usuarios.map((user) => (
             <tr key={user.id}>
               <td>{user.id}</td>
-              <td>{user.userName}</td>
+              <td>{user.username}</td>
               <td>{user.email}</td>
               <td>{user.cpf}</td>
-              <td>{user.perfil}</td>
+              <td>{user.profile}</td>
               <td>
                 <Link to={`/userEdit/${user.id}`} className="btn btn-sucess">
                   <i className="far fa-edit"></i>

@@ -36,10 +36,12 @@ body.login-page {
 
 .login-page .card .card-title {
 	margin-bottom: 30px;
+
 }
 
 .login-page .form-control {
 	border-width: 2.3px;
+	
 }
 
 .login-page .form-group label {
@@ -83,18 +85,22 @@ body.login-page {
   .login-container {
 	display: flex;
 	align-items: center;
-	margin-right: 60px; /* Ajuste conforme necessário */
+	margin-right: 60px; 
 	
   }
   
   .login-form {
-	margin-left: 20px; /* Espaço entre os elementos, ajuste conforme necessário */
+	margin-left: 20px;
   }
   
-  /* Estilos adicionais conforme necessário */
   
 .login-form,
 .new-user-form {
-  width: 400px; /* Ajuste conforme necessário para que ambos tenham a mesma largura */
-  margin: 0 20px; /* Espaço entre os elementos, ajuste conforme necessário */
+  width: 400px; 
+  margin: 0 20px;
 }
+.forgot-password-link {
+	color: red;
+	text-decoration: underline; /* Adiciona um sublinhado, se desejado */
+	cursor: pointer; /* Muda o cursor para indicar que é clicável */
+  }

@@ -10,5 +10,5 @@ public class UserDto {
     private String email;
     private String password;
     private String cpf;
-    private String perfil;
+    private String profile;
 }

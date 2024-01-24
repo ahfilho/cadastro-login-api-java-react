@@ -20,7 +20,7 @@ body.login-page {
 }
 
 .login-page .card-wrapper {
-	width: 400px;
+	width: 450px;
 }
 
 .login-page .card {
@@ -40,6 +40,7 @@ body.login-page {
 
 .login-page .form-control {
 	border-width: 2.3px;
+	width: 90%;
 }
 
 .login-page .form-group label {
@@ -83,18 +84,41 @@ body.login-page {
   .login-container {
 	display: flex;
 	align-items: center;
-	margin-right: 60px; /* Ajuste conforme necessário */
-	
+	margin-right: 60px; 
   }
   
   .login-form {
-	margin-left: 20px; /* Espaço entre os elementos, ajuste conforme necessário */
+	margin-left: 20px; 
   }
   
-  /* Estilos adicionais conforme necessário */
   
 .login-form,
 .new-user-form {
-  width: 400px; /* Ajuste conforme necessário para que ambos tenham a mesma largura */
-  margin: 0 20px; /* Espaço entre os elementos, ajuste conforme necessário */
+  width: 400px; 
+  margin: 0 20px; 
 }
+.form-group-button{
+align-items: end;
+margin-top: 30px;
+}
+
+.login-container {
+	display: flex;
+	align-items: center;
+  }
+  
+  .login-form,
+  .new-user-form {
+	width: 400px;
+
+	margin-right: 50px; /* Espaço entre os elementos, ajuste conforme necessário */
+  }
+  .error-message-container {
+	background-color: #f8d9d9; /* Fundo vermelho suave */
+	border: 1px solid #e6b1ab; /* Borda vermelha */
+	border-radius: 5px; /* Borda arredondada */
+	padding: 10px; /* Espaçamento interno */
+	margin-bottom: 10px; /* Espaçamento inferior */
+	color: #5f0a01; /* Cor do texto vermelho */
+  }
+  

@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@OpenAPIDefinition(info=@Info(title="SisWeb",version = "1.0",description = "Api com login e cadastro"))
+@OpenAPIDefinition(info = @Info(title = "Sisweb", version = "1", description = "API de login e cadastro de usuário"))
 public class WebSystemApplication {
 
 	public static void main(String[] args) {

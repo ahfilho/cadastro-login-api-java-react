@@ -2,9 +2,13 @@ package br.com.service;
 
 import br.com.entity.User;
 import br.com.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +19,10 @@ public class UserService implements UserDetailsService {
 
     final UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -24,7 +32,7 @@ public class UserService implements UserDetailsService {
         List<User> users = userRepository.findAll();
 
         for (User usr : users) {
-            if ("ADMINISTRADOR".equals(usr.getPerfil())) {
+            if ("ADMINISTRADOR".equals(usr.getProfile())) {
                 // É um administrador
                 System.out.println("Administrador: " + usr.getUsername());
             } else {
@@ -34,17 +42,6 @@ public class UserService implements UserDetailsService {
         }
         userRepository.save(user);
     }
-
-    public boolean findByCpf(String cpf) {
-        User existingCpf = userRepository.userWithSameCpf(cpf);
-        return existingCpf != null;
-    }
-
-    public boolean findByEmail(String email) {
-        User existingEmail = userRepository.userWithSameCpf(email);
-        return existingEmail != null;
-    }
-
 
     @Override
     public UserDetails loadUserByUsername(String nome) throws UsernameNotFoundException {
@@ -67,7 +64,7 @@ public class UserService implements UserDetailsService {
             User user = optionalUser.get();
 
             // Certifique-se de que a comparação seja insensível a maiúsculas/minúsculas
-            if ("admin".equalsIgnoreCase(user.getPerfil())) {
+            if ("admin".equalsIgnoreCase(user.getProfile())) {
                 userRepository.delete(user);
             } else {
                 throw new Exception("Usuário não autorizado para excluir.");
@@ -77,4 +74,38 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    public void dataUpdate(User user) {
+        try {
+            User existingUser = userRepository.userWithSameCpf(user.getCpf());
+
+            if (existingUser != null) {
+                existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+                userRepository.save(existingUser);
+            } else {
+                throw new RuntimeException("Usuário não encontrado pelo CPF: " + user.getCpf());
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao atualizar a senha: " + e.getMessage(), e);
+        }
+    }
+
+    public boolean findByCpf(String cpf) {
+        User existingCpf = userRepository.userWithSameCpf(cpf);
+        return existingCpf != null;
+    }
+
+    public boolean findByEmail(String email) {
+        User existingEmail = userRepository.userWithSameEmail(email);
+        return existingEmail != null;
+    }
+//
+//    private boolean findByPassword(String password) {
+//        User user = userRepository.findByUsernameAndPassword(password);
+//        if (user != null) {
+//            return user.getPassword().equalsIgnoreCase(password);
+//        }
+//        return
+//                false;
+//    }
 }

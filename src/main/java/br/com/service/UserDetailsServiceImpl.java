@@ -8,34 +8,35 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-@Primary
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    //    @Autowired
-//    private UserDetailsRepository userDetailsRepository;
-    private final UserDetailsRepository userDetailsRepository;
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    public UserDetailsServiceImpl(UserDetailsRepository userDetailsRepository, UserRepository userRepository) {
-        this.userDetailsRepository = userDetailsRepository;
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    private UserDetailsRepository userDetailsRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUserName(username).orElseThrow(() ->
-                new UsernameNotFoundException("Usuário não encontrado para este nome: " + username));
+        Optional<User> userOptional = Optional.ofNullable(userDetailsRepository.findByUserName(username));
 
-//        Optional<User> user2 = Optional.ofNullable(userRepository.findByUserName(username).orElseThrow(() ->
-//                new UsernameNotFoundException("Usuário não encontrado para este nome: " + username)));
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
 
-        return new User(user.getUsername(), user.getPassword(),true, true,true,true, user.getAuthorities());
-
-
+            return user;
+        } else {
+            throw new UsernameNotFoundException("Nome de usuário não encontrado: " + username);
+        }
     }
 }
+
+

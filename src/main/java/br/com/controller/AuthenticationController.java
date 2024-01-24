@@ -7,6 +7,7 @@ import br.com.entity.AuthenticationRequest;
 import br.com.entity.LoginResponse;
 import br.com.entity.UserInfo;
 //import jakarta.servlet.http.HttpServletResponse;
+import br.com.service.UserDetailsServiceImpl;
 import br.com.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,20 +37,21 @@ public class AuthenticationController {
 
     private final JWTTokenHelper jwtTokenHelper;
 
-    private final UserDetailsService userDetailsService;
-
     private final CorsConfigurationSource corsConfigurationSource;
     private final PasswordEncoder passwordEncoder;
 
-    private final UserService userService;
+//    private final UserService userService;
 
-    public AuthenticationController(AuthenticationManager authenticationManager, JWTTokenHelper jwtTokenHelper, UserDetailsService userDetailsService, CorsConfigurationSource corsConfigurationSource, PasswordEncoder passwordEncoder, UserService userService) {
+    @Autowired
+    private UserDetailsServiceImpl userDetailsServiceImpl;
+
+    public AuthenticationController(AuthenticationManager authenticationManager, JWTTokenHelper jwtTokenHelper , CorsConfigurationSource corsConfigurationSource, PasswordEncoder passwordEncoder, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenHelper = jwtTokenHelper;
-        this.userDetailsService = userDetailsService;
+//        this.userDetailsService = userDetailsService;
         this.corsConfigurationSource = corsConfigurationSource;
         this.passwordEncoder = passwordEncoder;
-        this.userService = userService;
+//        this.userService = userService;
     }
 
 
@@ -60,28 +62,29 @@ public class AuthenticationController {
         final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 authenticationRequest.getUserName(), authenticationRequest.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        var nomeEsenha = new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(), authenticationRequest.getPassword());
+        var auth = this.authenticationManager.authenticate(nomeEsenha);
 
-        User user = (User) authentication.getPrincipal();
-        String jwtToken = jwtTokenHelper.generateToken(user.getUsername());
+        // Obter as informações do usuário a partir do objeto Authentication
+        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+        String jwtToken = jwtTokenHelper.generateToken(String.valueOf(nomeEsenha));
 
         LoginResponse response = new LoginResponse();
         response.setToken(jwtToken);
-
+        ////MORRE AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
         return ResponseEntity.ok(response);
     }
-
 
 
     @GetMapping("/auth/userinfo")
     public ResponseEntity<?> getUserInfo(Principal user) {
 
-        User userObj = (User) userDetailsService.loadUserByUsername(user.getName());
+        User userObj = (User) userDetailsServiceImpl.loadUserByUsername(user.getName());
 
         UserInfo userInfo = new UserInfo();
         userInfo.setUserName(userObj.getUsername());
         userInfo.setPassword(userObj.getPassword());
-        userInfo.setRoles(userObj.getAuthorities().toArray());
+        userInfo.setRoles(userObj.getProfile());
 
         return ResponseEntity.ok(userInfo);
 

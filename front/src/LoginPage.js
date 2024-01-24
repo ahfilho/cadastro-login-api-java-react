@@ -6,22 +6,24 @@ import { userLogin } from '../src/authenticationService';
 import { Alert, Spinner } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 import NewUser from './NewUser';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = ({ loading, error, ...props }) => {
     const [values, setValues] = useState({
         userName: '',
         password: ''
     });
+    const history = useNavigate();
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
         props.authenticate();
-
+        console.log(values, "aaaaa");
         userLogin(values).then((response) => {
             console.log("response", response);
             if (response.status === 200) {
                 props.setUser(response.data);
-                props.history.push('/dasboard');
+                props.history.push('/hola');
             } else {
                 props.loginFailure('Something Wrong! Please Try Again');
             }
@@ -40,7 +42,6 @@ const LoginPage = ({ loading, error, ...props }) => {
             }
         });
     };
-
     const handleChange = (e) => {
         e.persist();
         setValues(values => ({
@@ -49,15 +50,11 @@ const LoginPage = ({ loading, error, ...props }) => {
         }));
     };
 
+
     return (
         <div className="login-page">
             <div className="login-container">
                 <NewUser />
-
-            <Link to="/list" className="animated-button9">
-              Cliente
-            </Link>
-
             </div>
             <section className="h-100">
                 <div className="container h-100">
@@ -70,7 +67,7 @@ const LoginPage = ({ loading, error, ...props }) => {
                                         <div className="form-group">
                                             <label htmlFor="email">Usuário</label>
                                             <input
-                                                id="userName"
+                                                id="username"
                                                 type="text"
                                                 className="form-control"
                                                 minLength={5}
@@ -86,7 +83,7 @@ const LoginPage = ({ loading, error, ...props }) => {
                                         <div className="form-group">
                                             <label>Senha
                                                 {/* <Link to="**" className="animated-button9"></Link> */}
-                                            
+
                                             </label>
                                             <input
                                                 id="password"
@@ -121,8 +118,18 @@ const LoginPage = ({ loading, error, ...props }) => {
                                                 )}
                                             </button>
                                         </div>
-                                        <div>  <Link to="**" className="animated-button9"></Link>
-                                                Forgot Password?</div>
+                                        <div>
+
+                                            <br></br>
+                                            <br></br>
+                                            <Link
+                                                to="/forgot/password"
+                                                style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}
+                                            >
+                                                Forgot Password?
+                                            </Link>
+                                        </div>
+
                                     </form>
                                     {error && (
                                         <Alert style={{ marginTop: '20px' }} variant="danger">
@@ -130,12 +137,13 @@ const LoginPage = ({ loading, error, ...props }) => {
                                         </Alert>
                                     )}
                                 </div>
+
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </div>
+                </div >
+            </section >
+        </div >
     );
 };
 
