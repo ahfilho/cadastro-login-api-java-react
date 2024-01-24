@@ -1,4 +1,4 @@
-package br.com;
+package br.com.seeding;
 import br.com.entity.User;
 import br.com.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
