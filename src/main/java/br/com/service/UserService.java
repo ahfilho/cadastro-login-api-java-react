@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,8 +51,17 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public List<User> listAll() {
-        return userRepository.findAll();
+
+    public List<User> listAll(User authenticatedUser) {
+        if (authenticatedUser == null || isAdmin(authenticatedUser)) {
+            return userRepository.findAll();
+        } else {
+            // Implemente lógica para retornar apenas informações do usuário autenticado
+            return Collections.singletonList(authenticatedUser);
+        }
+    }
+    public boolean isAdmin(User user) {
+        return "admin".equalsIgnoreCase(user.getProfile());
     }
 
     public void deleteUserById(Long id) throws Exception {
