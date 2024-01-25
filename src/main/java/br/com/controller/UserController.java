@@ -4,6 +4,7 @@ package br.com.controller;
 import br.com.auth.JWTTokenHelper;
 import br.com.dto.UserDto;
 import br.com.entity.User;
+import br.com.service.UserDetailsServiceImpl;
 import br.com.service.UserService;
 //import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -74,7 +76,7 @@ public class UserController {
         }
     }
 
-    @Operation(summary = "Lista todos os usuários com as informações,.", method = "GET")
+    @Operation(summary = "Lista os usuarios com base no perfil autenticao. Se não estiver autenticado, lista todos os usuários,.", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK. Lista todos os cadastrados."),
             @ApiResponse(responseCode = "400", description = "BAD REQUEST. Verifique os dados. Cpf ou E-mail já existe no banco."),
@@ -83,8 +85,21 @@ public class UserController {
 
     })
     @GetMapping("/todos")
-    public List<User> list() {
-        return userService.listAll();
+    public ResponseEntity<List<User>> listAllUsers(Principal principal) {
+        if (principal == null) {
+            List<User> allUsers = userService.listAll(null);
+            return ResponseEntity.ok(allUsers);
+        }
+
+        UserDetailsServiceImpl userDetailsService = null;
+        User authenticatedUser = (User) userDetailsService.loadUserByUsername(principal.getName());
+
+        if (userService.isAdmin(authenticatedUser)) {
+            List<User> allUsers = userService.listAll(authenticatedUser);
+            return ResponseEntity.ok(allUsers);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
 
