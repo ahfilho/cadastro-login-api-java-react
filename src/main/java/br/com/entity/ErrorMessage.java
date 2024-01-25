@@ -11,7 +11,7 @@ import java.util.Date;
 @Data
 public class ErrorMessage {
 
-	private Date currentDate;
-	private String message;
-	
+    private Date currentDate;
+    private String message;
+
 }
