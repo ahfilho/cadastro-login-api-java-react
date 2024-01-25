@@ -85,7 +85,6 @@ public class AuthenticationController {
         return ResponseEntity.ok(response);
     }
 
-
     @Operation(description = "Fornece Informações do usuário após validar o token.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso"),

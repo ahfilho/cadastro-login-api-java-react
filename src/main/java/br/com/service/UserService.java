@@ -60,6 +60,7 @@ public class UserService implements UserDetailsService {
             return Collections.singletonList(authenticatedUser);
         }
     }
+
     public boolean isAdmin(User user) {
         return "admin".equalsIgnoreCase(user.getProfile());
     }
