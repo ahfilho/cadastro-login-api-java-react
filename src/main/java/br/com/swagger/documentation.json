@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Sisweb",
-    "description": "API de login e cadastro de usuário. http://localhost:8080/v3/api-docs",
+    "description": "API de login e cadastro de usuário",
     "version": "1"
   },
   "servers": [
@@ -181,47 +181,6 @@
         }
       }
     },
-    "/api/auth/api/auth/login": {
-      "post": {
-        "tags": [
-          "/api/auth"
-        ],
-        "summary": "Autentica o login",
-        "operationId": "login_1",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AuthenticationRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Autentica o usuário com sucesso",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/user/auth/userinfo": {
       "get": {
         "tags": [
@@ -268,8 +227,8 @@
         "tags": [
           "user-controller"
         ],
-        "summary": "Lista todos os usuários com as informações,.",
-        "operationId": "list",
+        "summary": "Lista os usuarios com base no perfil autenticao. Se não estiver autenticado, lista todos os usuários,.",
+        "operationId": "listAllUsers",
         "responses": {
           "400": {
             "description": "BAD REQUEST. Verifique os dados. Cpf ou E-mail já existe no banco.",
