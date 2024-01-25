@@ -45,9 +45,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationEntryPoint authenticationEntryPoint;
 
-    public WebSecurityConfig(UserDetailsServiceImpl userDetailsServiceImpl ) {
+    public WebSecurityConfig(UserDetailsServiceImpl userDetailsServiceImpl) {
         this.userDetailsServiceImpl = userDetailsServiceImpl;
     }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
@@ -84,16 +85,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint)
                 .and()
-
                 .csrf(csrf -> csrf.ignoringAntMatchers("/h2-console/**"))
                 .authorizeRequests()
-
-
                 .antMatchers(("/")).permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .antMatchers("/localhost:3000/**", "/localhost:8080/**").permitAll()
-                .antMatchers("/user/auth/login", "/user/auth/todos","/new/user/reset", "/api/auth", "swagger-ui.html", "/user/auth/userinfo", "/", "/user/auth/todos", "/auth/login", "/new/user", "/new/user/todos", "/new/user/{id}", "/api/auth/login").permitAll()
+                .antMatchers("/user/auth/login", "/user/auth/todos", "/new/user/reset", "/api/auth", "swagger-ui.html", "/user/auth/userinfo", "/", "/user/auth/todos", "/auth/login", "/new/user", "/new/user/todos", "/new/user/{id}", "/api/auth/login").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                 .antMatchers("/new/user/reset").permitAll()
@@ -103,7 +101,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and().formLogin().loginPage("/").permitAll()
                 .and().logout().permitAll()
-
                 .and()
                 .addFilterBefore(new JWTAuthenticationFilter(userDetailsServiceImpl, jWTTokenHelper), UsernamePasswordAuthenticationFilter.class);
 
@@ -113,11 +110,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         // Ignorar o caminho do console do H2 para que ele seja acessível sem autenticação
-        web.ignoring().antMatchers("/h2-console/**","/swagger-ui/**, /v3/api-docs/**", "/**.html",
+        web.ignoring().antMatchers("/h2-console/**", "/swagger-ui/**, /v3/api-docs/**", "/**.html",
                 "/v2/api-docs",
                 "/webjars/**",
                 "/configuration/**",
-                "/swagger-resources/**","/v3/api-docs/**",
+                "/swagger-resources/**", "/v3/api-docs/**",
                 "/swagger-ui/**", "/swagger-ui/index.html/**");
 
     }
