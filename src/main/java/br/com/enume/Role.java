@@ -2,16 +2,16 @@ package br.com.enume;
 
 public enum Role {
 
-ADMIN("ADMIN"),
-USER("USER");
+    ROLE_ADMIN("ADMIN"),
+    ROLE_USER("USUARIO");
 
-
-    private String role;
+    private final String role;
 
     Role(String role) {
         this.role = role;
     }
-    public String getRole(){
-        return  role;
+
+    public String getRole() {
+        return role;
     }
 }

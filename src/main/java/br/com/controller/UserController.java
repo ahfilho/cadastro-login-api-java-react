@@ -66,8 +66,6 @@ public class UserController {
             ModelMapper modelMapper = new ModelMapper();
             var user = modelMapper.map(userDto, User.class);
 
-            String encryptedPassword = passwordEncoder.encode(user.getPassword());
-            user.setPassword(encryptedPassword);
             userService.saveNewUser(user);
 
             return ResponseEntity.status(HttpStatus.CREATED).body("Usuário cadastrado com sucesso! \n");

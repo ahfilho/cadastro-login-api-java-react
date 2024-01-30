@@ -1,6 +1,8 @@
 package br.com.service;
 
+import br.com.entity.Authority;
 import br.com.entity.User;
+import br.com.enume.Role;
 import br.com.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -25,19 +28,36 @@ public class UserService implements UserDetailsService {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
     public void saveNewUser(User user) {
+        user.setEnabled(true);
 
-        List<User> users = userRepository.findAll();
+        List<Authority> authorityList = new ArrayList<>();
 
-        for (User usr : users) {
-            if ("ADMINISTRADOR".equals(usr.getProfile())) {
-                System.out.println("Administrador: " + usr.getUsername());
-            } else {
-                System.out.println("Usuário Comum: " + usr.getUsername());
-            }
+        String lowercaseProfile = user.getProfile().toLowerCase(); // Converte para minúsculas
+
+        if ("admin".equals(lowercaseProfile)) {
+            user.setProfile(Role.ROLE_ADMIN.getRole().toLowerCase()); // Atribui "admin" em minúsculas
+            authorityList.add(createAuthorithy("ADMIN", "Admin role"));
+        } else if ("usuario".equals(lowercaseProfile)) {
+            user.setProfile(Role.ROLE_USER.getRole().toLowerCase()); // Atribui "usuario" em minúsculas
+            authorityList.add(createAuthorithy("USER", "User role"));
+        } else {
+            // Caso o perfil não seja "admin" ou "usuario", você pode lidar com isso conforme necessário
+            throw new IllegalArgumentException("Perfil inválido: " + user.getProfile());
         }
+
+        user.setAuthorities(authorityList);
+        String encryptedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encryptedPassword);
         userRepository.save(user);
+    }
+
+
+    private Authority createAuthorithy(String roleCode, String roleDescription) {
+        Authority authority = new Authority();
+        authority.setRoleCode(roleCode);
+        authority.setRoleDescription(roleDescription);
+        return authority;
     }
 
     @Override

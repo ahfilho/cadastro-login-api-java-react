@@ -74,14 +74,15 @@ public class AuthenticationController {
         final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 authenticationRequest.getUserName(), authenticationRequest.getPassword()));
 
-        var nomeEsenha = new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(), authenticationRequest.getPassword());
-        var auth = this.authenticationManager.authenticate(nomeEsenha);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        UserDetails userDetails = (UserDetails) auth.getPrincipal();
-        String jwtToken = jwtTokenHelper.generateToken(String.valueOf(nomeEsenha));
+        User user = (User) authentication.getPrincipal();
+        String jwtToken = jwtTokenHelper.generateToken(user.getUsername());
+        System.out.println("Token gerado para o usuário: " + user.getUsername());
 
         LoginResponse response = new LoginResponse();
         response.setToken(jwtToken);
+
         return ResponseEntity.ok(response);
     }
 
@@ -98,9 +99,11 @@ public class AuthenticationController {
         User userObj = (User) userDetailsServiceImpl.loadUserByUsername(user.getName());
 
         UserInfo userInfo = new UserInfo();
-        userInfo.setUserName(userObj.getUsername());
+        userInfo.setFirstName(userObj.getFirstName());
+        userInfo.setLastName(userObj.getLastName());
         userInfo.setPassword(userObj.getPassword());
         userInfo.setRoles(userObj.getProfile());
+        userInfo.setRoles(userObj.getAuthorities().toArray());
 
         return ResponseEntity.ok(userInfo);
 

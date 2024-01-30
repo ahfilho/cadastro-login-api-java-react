@@ -7,8 +7,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Arrays;
-
 @Configuration
 public class ConfigSeeding {
 
@@ -29,6 +27,8 @@ public class ConfigSeeding {
         return args -> {
             if (userRepository.count() == 0) {
                 User user = new User();
+                user.setFirstName("Joana");
+                user.setLastName("Silva");
                 user.setUserName("Maria");
                 user.setEmail("maria@dgmail.com");
                 user.setPassword("456123");
@@ -40,6 +40,8 @@ public class ConfigSeeding {
 
 
                 User user2 = new User();
+                user2.setFirstName("João");
+                user2.setLastName("Santos");
                 user2.setUserName("Manoel");
                 user2.setEmail("joao@gmail.com");
                 user2.setPassword("123456");
