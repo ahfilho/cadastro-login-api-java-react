@@ -11,31 +11,26 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private UserDetailsRepository userDetailsRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> userOptional = Optional.ofNullable(userDetailsRepository.findByUserName(username));
+        User user = (User) userRepository.findByUserName(username);
 
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-
-            return user;
-        } else {
-            throw new UsernameNotFoundException("Nome de usuário não encontrado: " + username);
+        if (null == user) {
+            throw new UsernameNotFoundException("Nome de usuário não encontrado:" + username);
         }
+        return user;
     }
 }
 

@@ -6,7 +6,6 @@ import br.com.entity.User;
 import br.com.entity.AuthenticationRequest;
 import br.com.entity.LoginResponse;
 import br.com.entity.UserInfo;
-//import jakarta.servlet.http.HttpServletResponse;
 import br.com.service.UserDetailsServiceImpl;
 import br.com.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,9 +18,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -30,7 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.security.spec.InvalidKeySpecException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -39,13 +34,9 @@ import java.util.List;
 public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
-
     private final JWTTokenHelper jwtTokenHelper;
-
     private final CorsConfigurationSource corsConfigurationSource;
     private final PasswordEncoder passwordEncoder;
-
-//    private final UserService userService;
 
     @Autowired
     private UserDetailsServiceImpl userDetailsServiceImpl;
@@ -74,14 +65,14 @@ public class AuthenticationController {
         final Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 authenticationRequest.getUserName(), authenticationRequest.getPassword()));
 
-        var nomeEsenha = new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(), authenticationRequest.getPassword());
-        var auth = this.authenticationManager.authenticate(nomeEsenha);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        UserDetails userDetails = (UserDetails) auth.getPrincipal();
-        String jwtToken = jwtTokenHelper.generateToken(String.valueOf(nomeEsenha));
+        User user = (User) authentication.getPrincipal();
+        String jwtToken = jwtTokenHelper.generateToken(user.getUsername());
 
         LoginResponse response = new LoginResponse();
         response.setToken(jwtToken);
+
         return ResponseEntity.ok(response);
     }
 
@@ -98,9 +89,11 @@ public class AuthenticationController {
         User userObj = (User) userDetailsServiceImpl.loadUserByUsername(user.getName());
 
         UserInfo userInfo = new UserInfo();
-        userInfo.setUserName(userObj.getUsername());
+        userInfo.setFirstName(userObj.getFirstName());
+        userInfo.setLastName(userObj.getLastName());
         userInfo.setPassword(userObj.getPassword());
         userInfo.setRoles(userObj.getProfile());
+        userInfo.setRoles(userObj.getAuthorities().toArray());
 
         return ResponseEntity.ok(userInfo);
 

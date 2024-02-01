@@ -6,7 +6,6 @@ import br.com.dto.UserDto;
 import br.com.entity.User;
 import br.com.service.UserDetailsServiceImpl;
 import br.com.service.UserService;
-//import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -57,17 +56,12 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                         String.format("Não foi possível cadastrar o cliente: " + userDto.getUserName() + ", pois, o E-mail:" + userDto.getEmail() + " já existe na base de dados."));
             }
-
-
             if (userDto.getUserName() == null || userDto.getPassword() == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A senha não pode ser nula.");
             }
-
             ModelMapper modelMapper = new ModelMapper();
             var user = modelMapper.map(userDto, User.class);
 
-            String encryptedPassword = passwordEncoder.encode(user.getPassword());
-            user.setPassword(encryptedPassword);
             userService.saveNewUser(user);
 
             return ResponseEntity.status(HttpStatus.CREATED).body("Usuário cadastrado com sucesso! \n");
@@ -90,7 +84,6 @@ public class UserController {
             List<User> allUsers = userService.listAll(null);
             return ResponseEntity.ok(allUsers);
         }
-
         UserDetailsServiceImpl userDetailsService = null;
         User authenticatedUser = (User) userDetailsService.loadUserByUsername(principal.getName());
 

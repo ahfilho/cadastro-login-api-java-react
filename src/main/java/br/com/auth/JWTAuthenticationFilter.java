@@ -32,7 +32,6 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String authToken = jwtTokenHelper.getToken(request);
-
         if (null != authToken) {
             String userName = jwtTokenHelper.getUsernameFromToken(authToken);
 
@@ -45,10 +44,10 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                     authentication.setDetails(new WebAuthenticationDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
 
+                } else {
+                    logger.error("Token inválido para o usuário: " + userName);
                 }
-
             }
-
         }
 
         filterChain.doFilter(request, response);

@@ -1,6 +1,5 @@
 package br.com.entity;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -28,7 +28,7 @@ public class User implements UserDetails {
 
     @NotBlank(message = "O nome não pode estar em branco")
     @Size(min = 2, max = 30, message = "O nome deve ter entre 2 e 50 caracteres")
-//    @Column(name = "USER_NAME")
+    @Column(name = "USER_NAME", unique = true)
     private String userName;
 
     @NotBlank(message = "O e-mail não pode estar em branco")
@@ -39,6 +39,18 @@ public class User implements UserDetails {
     @Size(min = 6, message = "A senha deve ter pelo menos 6 caracteres")
     @Column(name = "USER_KEY")
     private String password;
+
+    @Column(name = "CREATED_ON")
+    private Date createdAt;
+
+    @Column(name = "UPDATED_ON")
+    private Date updatedAt;
+
+    @Column(name = "FIRST_NAME")
+    private String firstName;
+
+    @Column(name = "LAST_NAME")
+    private String lastName;
 
     @NotBlank(message = "O CPF não pode estar em branco")
     @Pattern(regexp = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}", message = "O CPF deve ter o formato 999.999.999-99")
@@ -53,20 +65,19 @@ public class User implements UserDetails {
     @Column(name = "ENABLED")
     private boolean enabled = true;
 
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "AUTH_USER_AUTHORITY", joinColumns = @JoinColumn(referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(referencedColumnName = "id"))
     private List<Authority> authorities;
 
-    @ManyToOne
-
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
-
+    @Override
     public String getUsername() {
         return this.userName;
     }
-    // Os metodos abaixo são FALSE por padrão. Estão TRUE apepas para facilidade da construção da aí.
 
     @Override
     public String getPassword() {
