@@ -36,15 +36,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsServiceImpl userDetailsServiceImpl;
-
     @Autowired
     private JWTTokenHelper jWTTokenHelper;
-
     @Autowired
     private AuthenticationEntryPoint authenticationEntryPoint;
-
     private final UserRepository userRepository;
-
     public WebSecurityConfig(UserDetailsServiceImpl userDetailsServiceImpl,
                              UserRepository userRepository) {
         this.userDetailsServiceImpl = userDetailsServiceImpl;
@@ -56,7 +52,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
 
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -82,27 +77,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint).and()
-                .authorizeRequests((request -> request.antMatchers("/localhost:3001/**", "/localhost:9090/**","/localhost:8080/**").permitAll()
-                .antMatchers(("/")).permitAll()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/h2-console/**").permitAll()
-                .antMatchers("/localhost:3000/**", "/localhost:3001/**", "/localhost:8080/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/user/auth/login").permitAll()
-                .antMatchers(
-                        "/user/auth/todos",
-                        "/new/user/reset",
-                        "/api/auth",
-                        "swagger-ui.html",
-                        "/user/auth/userinfo",
-                        "/user/auth/todos",
-                        "/auth/login",
-                        "/new/user",
-                        "/new/user/todos",
-                        "/new/user/{id}",
-                        "/api/auth/login").permitAll()
-                .antMatchers("/new/user/reset").permitAll()
-                .antMatchers("swagger-ui.html").permitAll()
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .authorizeRequests((request -> request.antMatchers(
+                                "/localhost:3001/**",
+                                "/localhost:9090/**",
+                                "/localhost:8080/**").permitAll()
+                        .antMatchers(("/")).permitAll()
+                        .antMatchers("/login").permitAll()
+                        .antMatchers("/h2-console/**").permitAll()
+                        .antMatchers("/localhost:3000/**", "/localhost:3001/**", "/localhost:8080/**").permitAll()
+                        .antMatchers(HttpMethod.POST, "/user/auth/login").permitAll()
+                        .antMatchers(
+                                "/user/auth/todos",
+                                "/new/user/reset",
+                                "/api/auth",
+                                "swagger-ui.html",
+                                "/user/auth/userinfo",
+                                "/user/auth/todos",
+                                "/auth/login",
+                                "/new/user",
+                                "/new/user/todos",
+                                "/new/user/{id}",
+                                "/api/auth/login").permitAll()
+                        .antMatchers("/new/user/reset").permitAll()
+                        .antMatchers("swagger-ui.html").permitAll()
+                        .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .antMatchers(HttpMethod.OPTIONS, "/**").permitAll().anyRequest().authenticated()))
                 .addFilterBefore(new JWTAuthenticationFilter(userDetailsServiceImpl, jWTTokenHelper),
                         UsernamePasswordAuthenticationFilter.class);

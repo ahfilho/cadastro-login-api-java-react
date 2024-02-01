@@ -7,11 +7,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
-import br.com.entity.User;
-import br.com.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -25,15 +21,11 @@ public class JWTTokenHelper {
 
     @Value("${jwt.auth.app}")
     private String appName;
-
     @Value("${jwt.auth.secret_key}")
     private String secretKey;
-
     @Value("${jwt.auth.expires_in}")
     private int expiresIn;
-
     private SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
-
 
     private Claims getAllClaimsFromToken(String token) {
         Claims claims;

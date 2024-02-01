@@ -28,25 +28,28 @@ public class UserService implements UserDetailsService {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
     public void saveNewUser(User user) {
         user.setEnabled(true);
 
         List<Authority> authorityList = new ArrayList<>();
 
-        String lowercaseProfile = user.getProfile().toLowerCase(); // Converte para minúsculas
+        String lowercaseProfile = user.getProfile().toLowerCase();
 
         if ("admin".equals(lowercaseProfile)) {
-            user.setProfile(Role.ROLE_ADMIN.getRole().toLowerCase()); // Atribui "admin" em minúsculas
+            user.setProfile(Role.ROLE_ADMIN.getRole().toLowerCase());
             authorityList.add(createAuthorithy("ADMIN", "Admin role"));
-        } else if ("usuario".equals(lowercaseProfile)) {
-            user.setProfile(Role.ROLE_USER.getRole().toLowerCase()); // Atribui "usuario" em minúsculas
+            user.setAuthorities(authorityList);
+        } else {
+            if ("usuario".equals(lowercaseProfile)) {
+            user.setProfile(Role.ROLE_USER.getRole().toLowerCase());
             authorityList.add(createAuthorithy("USER", "User role"));
         } else {
-            // Caso o perfil não seja "admin" ou "usuario", você pode lidar com isso conforme necessário
             throw new IllegalArgumentException("Perfil inválido: " + user.getProfile());
         }
+            user.setAuthorities(authorityList);
+        }
 
-        user.setAuthorities(authorityList);
         String encryptedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encryptedPassword);
         userRepository.save(user);
@@ -76,7 +79,6 @@ public class UserService implements UserDetailsService {
         if (authenticatedUser == null || isAdmin(authenticatedUser)) {
             return userRepository.findAll();
         } else {
-            // Implemente lógica para retornar apenas informações do usuário autenticado
             return Collections.singletonList(authenticatedUser);
         }
     }
