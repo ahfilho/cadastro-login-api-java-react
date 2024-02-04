@@ -1,5 +1,7 @@
+<h3>
+Bem-vindo à API Web de Login! </h3>
 
-Bem-vindo à API Web de Login! Esta API foi desenvolvida utilizando tecnologias como Java 11, ReactJS, Yarn, Axios, Spring Framework, Maven, H2 Database, Spring Boot, Spring Security e JJWT (Java JWT). O principal objetivo desta API é fornecer um serviço robusto para autenticação de usuários em aplicações web.
+<b>Esta API foi desenvolvida utilizando tecnologias como Java 11, ReactJS, Yarn, Axios, Spring Framework, Maven, H2 Database, Spring Boot, Spring Security e JJWT (Java JWT). O principal objetivo desta API é fornecer um serviço robusto para autenticação de usuários em aplicações web.<b>
 <br>
 Tecnologias Utilizadas<br>
 Java 11: A linguagem de programação principal para o desenvolvimento da API.<br>
