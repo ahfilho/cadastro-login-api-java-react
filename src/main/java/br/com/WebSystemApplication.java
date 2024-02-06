@@ -9,8 +9,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @OpenAPIDefinition(info = @Info(title = "Sisweb", version = "1", description = "API de login e cadastro de usuário"))
 public class WebSystemApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(WebSystemApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(WebSystemApplication.class, args);
+    }
+
 
 }

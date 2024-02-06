@@ -1,24 +1,24 @@
-import {AUTH_REQ,AUTH_SUCCESS,AUTH_FAILURE} from '../redux/types';
+import { AUTH_REQ, AUTH_SUCCESS, AUTH_FAILURE } from '../redux/types';
 
 
-export const authenticate=()=>{
+export const authenticate = () => {
     return {
-        type:AUTH_REQ
+        type: AUTH_REQ
     }
 }
 
 
-export const authSuccess= (content)=>{
-    localStorage.setItem('USER_KEY',content.token);
+export const authSuccess = (content) => {
+    localStorage.setItem('USER_KEY', content.token);
     return {
-        type:AUTH_SUCCESS,
-        payload:content
+        type: AUTH_SUCCESS,
+        payload: content
     }
 }
 
-export const authFailure=(error)=>{
+export const authFailure = (error) => {
     return {
-        type:AUTH_FAILURE,
-        payload:error
+        type: AUTH_FAILURE,
+        payload: error
     }
 }

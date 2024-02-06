@@ -7,16 +7,25 @@ class ListUser extends Component {
   state = {
     usuarios: [],
     userPerfil: 'USER',
+    showMessage: false,
+    message: ''
   };
+
   async remove(id, perfil) {
     const { userPerfil } = this.state;
-  
-    // Verificar se o usuário está autenticado e tem perfil de administrador
-    if (!userPerfil || userPerfil !== 'ADMIN') {
-      alert('Você não tem permissão para excluir usuários.');
+
+    // Verificar se o usuário está autenticado
+    if (!userPerfil) {
+      this.showMessage('Você não está logado.');
       return;
     }
-  
+
+    // Verificar se o usuário autenticado tem perfil de administrador
+    if (userPerfil !== 'ADMIN') {
+      this.showMessage('Você não tem permissão para excluir usuários.');
+      return;
+    }
+
     const confirmDelete = window.confirm("Deseja mesmo excluir?");
     if (confirmDelete) {
       axios
@@ -27,12 +36,25 @@ class ListUser extends Component {
         })
         .catch((error) => {
           console.error("Erro ao excluir usuário:", error);
+          this.showMessage('Erro ao excluir usuário. Por favor, tente novamente mais tarde.');
+
         });
     }
   }
-  
-  
-  
+
+  showMessage(message) {
+    this.setState({
+      showMessage: true,
+      message
+    });
+
+    setTimeout(() => {
+      this.setState({
+        showMessage: false,
+        message: ''
+      });
+    }, 3000); // 3 segundos
+  }
 
   componentDidMount() {
     axios.get("http://localhost:8080/new/user/todos").then((res) => {
@@ -40,12 +62,15 @@ class ListUser extends Component {
       this.setState({ usuarios });
     });
 
-    this.setState({ userPerfil: 'ADMIN' });
+    this.setState({ userPerfil: 'ADMIN' }); // Aqui você deve definir o perfil do usuário logado vindo do backend
   }
 
   render() {
+    const { showMessage, message } = this.state;
+
     return (
       <div className="tabela-container">
+        {showMessage && <div className="message">{message}</div>}
         <div className="tabela">
           <br></br>
           <div className="title">Usuários</div>
@@ -69,7 +94,7 @@ class ListUser extends Component {
             {this.state.usuarios.map((user) => (
               <tr key={user.id}>
                 <td>{user.id}</td>
-                <td>{user.firstName}</td>
+                <td>{user.firstName + " " + user.lastName}</td>
                 <td>{user.username}</td>
                 <td>{user.email}</td>
                 <td>{user.cpf}</td>
@@ -80,9 +105,11 @@ class ListUser extends Component {
                   </Link>
                 </td>
                 <td>
-                  <button onClick={() => this.remove(user.id, user.perfil)} className="btn btn-danger">
-                    <i className="fas fa-eraser"></i>
-                  </button>
+                  {this.state.userPerfil === 'ADMIN' && ( // Apenas o administrador pode ver o botão de exclusão
+                    <button onClick={() => this.remove(user.id, user.profile)} className="btn btn-danger">
+                      <i className="fas fa-eraser"></i>
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
