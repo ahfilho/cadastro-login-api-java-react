@@ -30,12 +30,14 @@ body.login-page {
 
 .login-page .card.fat {
 	padding: 10px;
-	margin-top: 100px;
-	background-color: #f0f0f0;
+	margin-top: 10px;
+	height: 550px;
+	background-color: #8e1aac46;
+	color: whitesmoke;	
 }
 
 .login-page .card .card-title {
-	margin-bottom: 30px;
+	margin-bottom: 50px;
 }
 
 .login-page .form-control {

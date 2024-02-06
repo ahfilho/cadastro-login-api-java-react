@@ -122,7 +122,7 @@ const NewUser = () => {
                     </div>
                     <div className="inputs">
                       <input
-                        type="text"
+                        type="password"
                         name="password"
                         id="password"
                         className="form-control"

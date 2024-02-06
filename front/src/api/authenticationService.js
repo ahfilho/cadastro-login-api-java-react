@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+
 const getToken = () => {
     return localStorage.getItem('USER_KEY');
 }
@@ -26,7 +27,7 @@ export const fetchUserData = () => {
         });
     } else {
         window.location.href = '/login';
-        
+
         return Promise.reject(new Error('Token não disponível'));
     }
 }

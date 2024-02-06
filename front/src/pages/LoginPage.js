@@ -40,7 +40,7 @@ const LoginPage = ({ loading, error, ...props }) => {
                         break;
                     default:
                         props.loginFailure('Algo saiu errado. Tente novamente.');
-                    }
+                }
             } else {
                 props.loginFailure('Algo saiu errado. Tente novamente.');
             }
@@ -123,7 +123,7 @@ const LoginPage = ({ loading, error, ...props }) => {
                                                 )}
                                             </button>
                                         </div>
-                                        <div>
+                                        <div className='senha'>
                                             <br></br>
                                             <br></br>
                                             <Link
