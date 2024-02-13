@@ -41,3 +41,5 @@ Copy code
 Acessar a Documentação da API:
 
 Acesse http://localhost:8080/swagger-ui.html para explorar e testar os endpoints da API.
+
+<h3> Para executar o projeto é necessário apenas clonar/baixar o arquivo, importar na IDE e executar.</h3>
