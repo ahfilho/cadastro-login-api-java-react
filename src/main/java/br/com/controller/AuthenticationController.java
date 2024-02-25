@@ -41,7 +41,10 @@ public class AuthenticationController {
     @Autowired
     private UserDetailsServiceImpl userDetailsServiceImpl;
 
-    public AuthenticationController(AuthenticationManager authenticationManager, JWTTokenHelper jwtTokenHelper, CorsConfigurationSource corsConfigurationSource, PasswordEncoder passwordEncoder, UserService userService) {
+    public AuthenticationController(AuthenticationManager authenticationManager,
+                                    JWTTokenHelper jwtTokenHelper,
+                                    CorsConfigurationSource corsConfigurationSource,
+                                    PasswordEncoder passwordEncoder, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenHelper = jwtTokenHelper;
         this.corsConfigurationSource = corsConfigurationSource;

@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService  {
 
     final UserRepository userRepository;
 
@@ -63,16 +63,16 @@ public class UserService implements UserDetailsService {
         return authority;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String nome) throws UsernameNotFoundException {
-        User user = userRepository.findByNome(nome);
-
-        if (user != null) {
-            return (UserDetails) user;
-        }
-        throw new UsernameNotFoundException("Usuário não encontrado: " + nome);
-
-    }
+//    @Override
+//    public UserDetails loadUserByUsername(String nome) throws UsernameNotFoundException {
+//        User user = userRepository.findByNome(nome);
+//
+//        if (user != null) {
+//            return (UserDetails) user;
+//        }
+//        throw new UsernameNotFoundException("Usuário não encontrado: " + nome);
+//
+//    }
 
 
     public List<User> listAll(User authenticatedUser) {
