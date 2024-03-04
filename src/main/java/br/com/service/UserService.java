@@ -4,7 +4,13 @@ import br.com.entity.Authority;
 import br.com.entity.User;
 import br.com.enume.Role;
 import br.com.repository.UserRepository;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService  {
+public class UserService {
 
     final UserRepository userRepository;
 
@@ -42,11 +48,11 @@ public class UserService  {
             user.setAuthorities(authorityList);
         } else {
             if ("usuario".equals(lowercaseProfile)) {
-            user.setProfile(Role.ROLE_USER.getRole().toLowerCase());
-            authorityList.add(createAuthorithy("USER", "User role"));
-        } else {
-            throw new IllegalArgumentException("Perfil inválido: " + user.getProfile());
-        }
+                user.setProfile(Role.ROLE_USER.getRole().toLowerCase());
+                authorityList.add(createAuthorithy("USER", "User role"));
+            } else {
+                throw new IllegalArgumentException("Perfil inválido: " + user.getProfile());
+            }
             user.setAuthorities(authorityList);
         }
 
@@ -88,17 +94,24 @@ public class UserService  {
     }
 
     public void deleteUserById(Long id) throws Exception {
-        Optional<User> optionalUser = userRepository.findById(id);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-            if ("admin".equalsIgnoreCase(user.getProfile())) {
-                userRepository.delete(user);
+        if (authentication != null && authentication.getAuthorities().stream().anyMatch(role -> role.getAuthority().equalsIgnoreCase("ADMIN"))) {
+            Optional<User> optionalUser = userRepository.findById(id);
+
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+
+                if ("admin".equalsIgnoreCase(user.getProfile())) {
+                    userRepository.delete(user);
+                } else {
+                    throw new AccessDeniedException("Usuário não autorizado para excluir.");
+                }
             } else {
-                throw new Exception("Usuário não autorizado para excluir.");
+                throw new NotFoundException("Usuário não encontrado para excluir.");
             }
         } else {
-            throw new Exception("Usuário não encontrado para excluir.");
+            throw new AccessDeniedException("Apenas administradores autenticados podem excluir.");
         }
     }
 

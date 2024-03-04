@@ -14,6 +14,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -103,9 +105,9 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "Deleta o usuário apenas se o perfil for de ADMIN."),
     })
     @DeleteMapping("/{id}")
-    public HttpStatus userDelete(@PathVariable Long id) throws Exception {
-        this.userService.deleteUserById(id);
-        return HttpStatus.OK;
+    public ResponseEntity<?> userDelete(@PathVariable Long id) throws Exception {
+      userService.deleteUserById(id);
+      return ResponseEntity.status(HttpStatus.OK).body("Excluido.");
     }
 
     @Operation(summary = "Reseta a senha de um usuário mediante confirmação de CPF E EMAIL.", method = "PUT")

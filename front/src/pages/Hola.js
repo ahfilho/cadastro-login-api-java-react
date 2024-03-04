@@ -35,7 +35,7 @@ export const Hola = (props) => {
     <Container>
 
 <div className='page'>
-<div className='titulo'>   <h3> Olá, {data && `${data.firstName} ${data.lastName}.  Perfil: ${data.roles && data.roles.find(role=> role.roleCode === "ADMIN")? 'Administrador':'Usuário'} `}</h3>
+<div className='titulo'>   <h3> Olá, {data && `${data.firstName} ${data.lastName}.  Perfil: ${data.roles && data.roles.find(role=> role.roleCode === "ADMIN")? 'Administrador':'Usuario'} `}</h3>
         </div>
         <div className="button-container">
           <button type="button" className="btn btn-primary">

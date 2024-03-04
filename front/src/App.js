@@ -9,12 +9,12 @@ import ForgotPass from './pages/ForgotPass';
 function App() {
   return (
     <Routes>
-      <Route path="/" exact element={<LoginPage />} />
-      <Route path="/reset/password" exact element={<ResetPassword />} />
-      <Route path="/new/user" exact element={<NewUser />} />
-      <Route path="/hola" exact element={<Hola />} />
-      <Route path="/list" exact element={<Listar />} />
-      <Route path="/forgot/password" exact element={<ForgotPass/>}/> 
+      <Route path="/"  element={<LoginPage />} />
+      <Route path="/reset/password"  element={<ResetPassword />} />
+      <Route path="/new/user"  element={<NewUser />} />
+      <Route path="/hola"  element={<Hola />} />
+      <Route path="/list"  element={<Listar />} />
+      <Route path="/forgot/password"  element={<ForgotPass/>}/> 
 
     </Routes>
   );
