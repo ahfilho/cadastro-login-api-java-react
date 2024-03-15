@@ -1,0 +1,14 @@
+.page{
+    width: 100vw; /* 100% da largura da viewport */
+    height: 100vh; /* 100% da altura da viewport */
+    background-color: rgb(205, 194, 219); /* Cor de fundo para visualização */
+}
+h3{
+    font-size: 20px;
+}
+.container{
+    margin-top: 0px;
+}
+.btn-primary{
+    margin-top: 5px;
+}

@@ -98,6 +98,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                                 "/new/user/todos",
                                 "/new/user/{id}",
                                 "/api/auth/login").permitAll()
+                        .antMatchers("/new/todos").permitAll()
                         .antMatchers("/new/user/reset").permitAll()
                         .antMatchers("swagger-ui.html").permitAll()
                         .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
