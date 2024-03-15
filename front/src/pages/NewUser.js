@@ -4,7 +4,7 @@ import './NewUser.css';
 import { Link } from "react-router-dom";
 
 
-const url = "http://localhost:8080/new/user";
+const url = "http://localhost:9091/new/user";
 
 const NewUser = () => {
   const [firstName, setFirstName] = useState("");

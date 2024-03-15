@@ -6,6 +6,7 @@ import NewUser from './pages/NewUser';
 import Hola from './pages/Hola';
 import Listar from './pages/Listar';
 import ForgotPass from './pages/ForgotPass';
+import Home from './pages/Home';
 function App() {
   return (
     <Routes>
@@ -15,6 +16,7 @@ function App() {
       <Route path="/hola"  element={<Hola />} />
       <Route path="/list"  element={<Listar />} />
       <Route path="/forgot/password"  element={<ForgotPass/>}/> 
+      <Route path="/pages/Home"  component={<Home/>}/> 
 
     </Routes>
   );
